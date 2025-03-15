@@ -1,5 +1,5 @@
 import React from  'react';
-import AppLayout from '../../components/AppLayout_1_공통메뉴';
+import AppLayout from '../../components/AppLayouts';
 
 const Signup = () =>{
    return (<AppLayout> 회원가입페이지 </AppLayout>);

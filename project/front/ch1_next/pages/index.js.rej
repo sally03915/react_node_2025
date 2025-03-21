@@ -1,0 +1,8 @@
+diff a/project/front/ch1_next/pages/index.js b/project/front/ch1_next/pages/index.js	(rejected hunks)
+@@ -1,5 +1,5 @@
+ import React from  'react';
+-import AppLayout from '../../components/AppLayout_1_공통메뉴';
++import AppLayout from '../../components/AppLayout';
+ 
+ const Home = () =>{
+    return (<AppLayout> Hello, Next </AppLayout>);

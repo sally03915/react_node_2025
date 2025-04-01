@@ -4,22 +4,25 @@ import { RetweetOutlined, HeartTwoTone, HeartOutlined, MessageOutlined, Ellipsis
 import { useSelector, useDispatch } from 'react-redux';
 import Link from 'next/Link';
 
+
+import PropTypes from 'prop-types';
+import PostImages from './PostImages';
 import CommentForm from './CommentForm';
 import PostCardContent from './PostCardContent';
-import PostImages from './PostImages';
-import PropTypes from 'prop-types';
-
 
 
 const PostCard = ({ post }) => {
-   const id = useSelector((state) => state.user.me && state.user.me.id);
+   //const id = useSelector((state) => state.user.me && state.user.me.id);
+   const [commentFormOpened, setCommentFormOpened] = useState(false);
    const [liked, setLiked] = useState(false);
+   const { me } = useSelector((state) => state.user);
+   const id = me && me.id;
+
+
    const onToggleLike = useCallback(() => {
       setLiked((prev) => !prev);
    }, []);
 
-
-   const [commentFormOpened, setCommentFormOpened] = useState(false);
    const onToggleComment = useCallback(() => {
       setCommentFormOpened((prev) => !prev);
    }, []);
@@ -27,7 +30,7 @@ const PostCard = ({ post }) => {
 
    return (
       <div>
-         <Card cover={post.Images[0] && <PostImages images={post.Images} />}
+         <Card cover={post.Images?.[0] && <PostImages images={post.Images} />}
             actions={[
                <RetweetOutlined key="retweet" />,
                liked
@@ -37,7 +40,7 @@ const PostCard = ({ post }) => {
                <MessageOutlined key="comment" onClick={onToggleComment} />,
                <Popover key="more" content={(
                   <Button.Group>
-                     {id && post.User.id === id
+                     {id && post.User === id
                         ? (
                            <>
                               <Button>수정</Button>
@@ -52,8 +55,15 @@ const PostCard = ({ post }) => {
             ]}
          >
             <Card.Meta
-               avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
-               title={post.User.nickname}
+               avatar={
+                  post.User && post.User.nickname ? (
+                     <Avatar>{post.User.nickname[0]}</Avatar>
+                  ) : (
+                     <Avatar>?</Avatar> // 기본값 또는 대체 UI
+                  )
+               }
+               title={post.User && post.User.nickname ? post.User.nickname : "Unknown User"}
+
                description={<PostCardContent postData={post.content} />}
             />
          </Card>

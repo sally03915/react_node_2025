@@ -2,21 +2,26 @@ import   React  from 'react';
 import   PropTypes  from 'prop-types';
 import  'antd/dist/antd.css';
 import   Head   from 'next/head';
+import   { Provider } from 'react-redux';
+import   wrapper from '../store/configureStore';
 
-const TheJoA = ({Component}) => {
+const TheJoA = ({Component, ...rest}) => {
+  const { store, props } = wrapper.useWrappedStore(rest);
+  const { pageProps } = props;
    return (
-      <>
+    <Provider store={store}>
          <Head>
             <meta charSet="utf-8" />
             <title>TheJoA</title>
          </Head>
          <Component />
-      </>
+    </Provider>
    )
 };
 
 TheJoA.propTypes = {
    Component : PropTypes.elementType.isRequired,
+   pageProps: PropTypes.any.isRequired,
 }
 
 export default TheJoA;

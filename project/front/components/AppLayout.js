@@ -1,43 +1,62 @@
-import React, { useState }  from  'react';
-import PropTypes  from 'prop-types';
-import Link  from 'next/Link';
+import React from 'react';
+import Link from 'next/Link';
+import PropTypes from 'prop-types';
 import { Menu, Input, Row, Col } from 'antd';
-import UserProfile  from '../components/UserProfile';
-import LoginForm  from '../components/LoginForm';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 
-const SearchInput  = styled(Input.Search)`
+import { useSelector } from 'react-redux';  //##
+
+import LoginForm from './LoginForm';
+import UserProfile from './UserProfile';
+
+
+
+const SearchInput = styled(Input.Search)`
     vertical-align: middle;
 `;
 
+const Global = createGlobalStyle`
+  .ant-row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  .ant-col:first-child {
+    margin-left: 0 !important;
+  }
+  .ant-col:last-child {
+    margin-right: 0 !important;
+  }
+  .ant-form-item-explain-error {
+    font-size: 11px;
+  }
+`;
 const AppLayout = ({ children }) => {
-   ////////////// code start
-   const [isLoggedIn,setIsLoggedIn ] = useState(false);
+  const { me } = useSelector(state => state.user);
 
-    const items = [
-            { label: <Link href="/">LOGO</Link>, key: '/' },
-            { label: <Link href="/profile">프로필</Link>, key: '/profile' },
-            { label: <SearchInput  enterButton />, key: '/search' },
-            { label: <Link href="/signup">회원가입</Link>, key: '/signup' },
-          ];
-    return (
-        <div>
-            <Menu  mode="horizontal"  items={items} />
-            <Row gutter={8} >
-                <Col xs={24} md={6}  >
-                    {isLoggedIn ? <UserProfile setIsLoggedIn={setIsLoggedIn}  /> :
-                                  <LoginForm setIsLoggedIn={setIsLoggedIn} />}
-                </Col>
-                <Col xs={24}  md={12} > {children}  </Col>
-                <Col xs={24}  md={6}  >
-                    <a href="https://thejoa.com/" target="_blank"
-                        rel="noreferrer  noopener">Made by TheJoA</a>
-                </Col>
-            </Row>
-        </div>
-    );
+  const items = [
+    { label: <Link href="/">LOGO</Link>, key: '/' },
+    { label: <Link href="/profile">프로필</Link>, key: '/profile' },
+    { label: <SearchInput enterButton />, key: '/search' },
+    { label: <Link href="/signup">회원가입</Link>, key: '/signup' },
+  ];
+  return (
+    <div>
+      <Global />
+      <Menu mode="horizontal" items={items} />
+      <Row gutter={8} >
+        <Col xs={24} md={6}  >
+          {me ? <UserProfile /> : <LoginForm />}
+        </Col>
+        <Col xs={24} md={12} > {children}  </Col>
+        <Col xs={24} md={6}  >
+          <a href="https://thejoa.com/" target="_blank"
+            rel="noreferrer  noopener">Made by TheJoA</a>
+        </Col>
+      </Row>
+    </div>
+  );
 };
 AppLayout.propTypes = {
-   children : PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired,
 };
 export default AppLayout;
